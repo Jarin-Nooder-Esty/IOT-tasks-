@@ -1,0 +1,36 @@
+#include <Servo.h>  // Include the Servo library
+
+// Create a Servo object
+Servo myServo;
+
+// Pin definitions
+const int irSensorPin = 2;  // Digital pin where the IR sensor is connected
+const int servoPin = 9;     // PWM pin where the servo is connected
+
+// Threshold for IR sensor (depends on your specific IR sensor)
+const int threshold = 500;  // Adjust this value based on your IR sensor readings
+
+void setup() {
+  // Initialize the servo
+  myServo.attach(servoPin);
+  
+  // Initialize the IR sensor pin as input
+  pinMode(irSensorPin, INPUT);
+}
+
+void loop() {
+  // Read the value from the IR sensor
+  int irValue = analogRead(irSensorPin);
+
+  // Check if the IR sensor value is above the threshold
+  if (irValue > threshold) {
+    // Object detected - move the servo to 90 degrees
+    myServo.write(90);
+  } else {
+    // No object detected - move the servo to 0 degrees
+    myServo.write(0);
+  }
+
+  // Small delay for stability
+  delay(100);
+}
