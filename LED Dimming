@@ -1,0 +1,27 @@
+// Pin number for the LED
+const int ledPin = 9; // Use a PWM-capable pin
+
+// Variables to control the LED brightness
+int brightness = 0;    // Initial brightness level
+int fadeAmount = 5;    // Amount to change the brightness each time
+
+void setup() {
+  // Set the LED pin as an output
+  pinMode(ledPin, OUTPUT);
+}
+
+void loop() {
+  // Set the brightness of the LED
+  analogWrite(ledPin, brightness);
+
+  // Change the brightness for the next loop iteration
+  brightness += fadeAmount;
+
+  // Reverse the direction of the fading at the ends of the fade
+  if (brightness <= 0 || brightness >= 255) {
+    fadeAmount = -fadeAmount;
+  }
+
+  // Wait for a short period to see the change
+  delay(30);
+}
