@@ -1,0 +1,68 @@
+// Sensor pins
+#define sensorPower 7
+#define sensorPin A0
+
+// LED pins
+#define led1Pin 3
+#define led2Pin 5
+#define led3Pin 6
+
+// Thresholds for controlling LEDs
+const int thresholdLow = 250;    // Threshold for low water level
+const int thresholdMedium = 400; // Threshold for medium water level
+const int thresholdHigh = 450;   // Threshold for high water level
+
+void setup() {
+  // Set D7 as an OUTPUT
+  pinMode(sensorPower, OUTPUT);
+  
+  // Set D3, D5, D6 as OUTPUT
+  pinMode(led1Pin, OUTPUT);
+  pinMode(led2Pin, OUTPUT);
+  pinMode(led3Pin, OUTPUT);
+  
+  // Set sensor power to LOW initially
+  digitalWrite(sensorPower, LOW);
+  
+  Serial.begin(9600);
+}
+
+void loop() {
+  // Get the reading from the sensor
+  int level = readSensor();
+  
+  // Print the water level to the Serial Monitor
+  Serial.print("Water level: ");
+  Serial.println(level);
+  
+  // Control LEDs based on the water level
+  if (level >= thresholdHigh) {
+    digitalWrite(led1Pin, HIGH);
+    digitalWrite(led2Pin, HIGH);
+    digitalWrite(led3Pin, HIGH);
+  } else if (level >= thresholdMedium) {
+    digitalWrite(led1Pin, HIGH);
+    digitalWrite(led2Pin, HIGH);
+    digitalWrite(led3Pin, LOW);
+  } else if (level >= thresholdLow) {
+    digitalWrite(led1Pin, HIGH);
+    digitalWrite(led2Pin, LOW);
+    digitalWrite(led3Pin, LOW);
+  } else {
+    digitalWrite(led1Pin, LOW);
+    digitalWrite(led2Pin, LOW);
+    digitalWrite(led3Pin, LOW);
+  }
+  
+  // Delay before the next reading
+  delay(1000);
+}
+
+// Function to read the sensor value
+int readSensor() {
+  digitalWrite(sensorPower, HIGH);  // Turn the sensor ON
+  delay(10);                        // Wait 10 milliseconds
+  int val = analogRead(sensorPin);  // Read the analog value from the sensor
+  digitalWrite(sensorPower, LOW);   // Turn the sensor OFF
+  return val;                       // Return the current reading
+}
