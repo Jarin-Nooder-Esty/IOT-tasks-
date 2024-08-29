@@ -1,0 +1,72 @@
+// Define pins for the ultrasonic sensor
+const int trigPin = 12;
+const int echoPin = 11;
+
+// Define pins for the LEDs
+const int led1Pin = 2;
+const int led2Pin = 3;
+const int led3Pin = 4;
+
+// Define distance thresholds (in centimeters)
+const int threshold1 = 20;  // Distance threshold for LED1
+const int threshold2 = 40;  // Distance threshold for LED2
+const int threshold3 = 60;  // Distance threshold for LED3
+
+void setup() {
+  // Initialize serial communication
+  Serial.begin(9600);
+  
+  // Set pins for ultrasonic sensor
+  pinMode(trigPin, OUTPUT);
+  pinMode(echoPin, INPUT);
+  
+  // Set pins for LEDs
+  pinMode(led1Pin, OUTPUT);
+  pinMode(led2Pin, OUTPUT);
+  pinMode(led3Pin, OUTPUT);
+}
+
+void loop() {
+  // Clear the trigPin condition
+  digitalWrite(trigPin, LOW);
+  delayMicroseconds(2);
+  
+  // Set the trigPin HIGH for 10 microseconds to trigger the sensor
+  digitalWrite(trigPin, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trigPin, LOW);
+  
+  // Read the echoPin to measure the time it took for the sound to return
+  long duration = pulseIn(echoPin, HIGH);
+  
+  // Calculate the distance in centimeters
+  float distance = (duration / 2.0) * 0.0343;
+  
+  // Print distance to the serial monitor
+  Serial.print("Distance: ");
+  Serial.print(distance);
+  Serial.println(" cm");
+  
+  // Control LEDs based on distance
+  if (distance <= threshold1) {
+    digitalWrite(led1Pin, HIGH);
+    digitalWrite(led2Pin, LOW);
+    digitalWrite(led3Pin, LOW);
+  } else if (distance <= threshold2) {
+    digitalWrite(led1Pin, LOW);
+    digitalWrite(led2Pin, HIGH);
+    digitalWrite(led3Pin, LOW);
+  } else if (distance <= threshold3) {
+    digitalWrite(led1Pin, LOW);
+    digitalWrite(led2Pin, LOW);
+    digitalWrite(led3Pin, HIGH);
+  } else {
+    // Turn off all LEDs if distance is greater than the largest threshold
+    digitalWrite(led1Pin, LOW);
+    digitalWrite(led2Pin, LOW);
+    digitalWrite(led3Pin, LOW);
+  }
+  
+  // Wait a short time before the next measurement
+  delay(200);
+}
